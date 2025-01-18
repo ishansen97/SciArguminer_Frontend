@@ -1,0 +1,20 @@
+.upload-area {
+    border: 2px dashed #007bff;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.upload-area.dragover {
+    background-color: #e9ecef;
+}
+.upload-area img {
+    width: 100px;
+    margin-bottom: 20px;
+}
+.upload-area p {
+    margin: 0;
+    font-weight: bold;
+}
