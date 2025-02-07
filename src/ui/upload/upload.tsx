@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is installed 
 import "./upload.css"; // Replace with the correct path to your CSS file
 import pdfIcon from "../../assets/images/pdf-icon.svg";
 import uploadIcon from '../../assets/images/cloud-computing.png'
+import spinner from '../../assets/images/spinner.svg'
 import {FileApi} from "../../service/FileApi.ts";
 import {useNavigate} from "react-router-dom";
 import {FileInputResponse} from "../../models/FileInput.ts";
@@ -12,6 +13,7 @@ const PdfUpload: React.FC = () => {
   const [fileName, setFileName] = useState<string | null>(null);
   const [validFile, setValidFile] = useState<boolean>(false);
   const [dragOver, setDragOver] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +64,7 @@ const PdfUpload: React.FC = () => {
     }
 
     console.log('about to upload');
+    setIsPending(true);
     const file = fileInputRef.current?.files?.[0];
     const formData = new FormData();
     formData.append("file", file); // The key name should match the API requirement
@@ -70,13 +73,15 @@ const PdfUpload: React.FC = () => {
       navigateToArguments(response)
     } else {
       setFileName("Something went wrong. Please try again.");
+      setIsPending(false)
     }
   };
 
   const navigateToArguments = (response: FileInputResponse) => {
     navigate('/arguments', {
       state: {
-        sections: response.sections
+        sections: response.sections,
+        argumentList: response.arguments
       }
     })
   }
@@ -86,11 +91,11 @@ const PdfUpload: React.FC = () => {
       <h1 className="text-center mb-4">Sci-Arguminer</h1>
       <div
         id="upload-area"
-        className={`upload-area ${dragOver ? "dragover" : ""}`}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        onClick={handleClick}
+        className={`upload-area ${dragOver ? "dragover" : ""} ${isPending ? "disabled" : ""}`}
+        onDragOver={isPending ? undefined : handleDragOver}
+        onDragLeave={isPending ? undefined : handleDragLeave}
+        onDrop={isPending ? undefined : handleDrop}
+        onClick={isPending ? undefined : handleClick}
       >
         <img src={pdfIcon} alt="PDF Icon" />
         <p className="text-sm">Drag and drop your file here</p>
@@ -98,18 +103,18 @@ const PdfUpload: React.FC = () => {
         <button
           className="btn btn-primary"
           type="button"
-          onClick={handleClick}
+          onClick={isPending ? undefined : handleClick}
         >
           Choose Files
         </button>
       </div>
-      {fileName && <div id="file-name" className={validFile ? "mt-3 text-center"
-          : "mt-3 text-center text-danger"}>{fileName}</div>}
-      <form onSubmit={handleSubmit}>
+      {fileName && <div id="file-name" className={`mt-3 text-center ${validFile ? 'text-danger' : ''}`}>{fileName}</div>}
+      <form onSubmit={isPending ? undefined : handleSubmit}>
         <div className="container mt-5 text-center">
           <button
             type="submit"
             className="bg-gradient btn btn-dark border-opacity-50"
+            disabled={isPending}
           >
             <img
               src={uploadIcon}
@@ -125,10 +130,14 @@ const PdfUpload: React.FC = () => {
               accept=".pdf"
               hidden
               ref={fileInputRef}
-              onChange={handleFileChange}
+              onChange={isPending ? undefined : handleFileChange}
             />
             <span className="text-md-center m-1">Upload</span>
           </button>
+          {/*loader*/}
+          <div className="mt-3" hidden={!isPending}>
+            <img src={spinner} alt="spinner"/>
+          </div>
         </div>
       </form>
     </div>

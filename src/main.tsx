@@ -6,7 +6,8 @@ import App from './App.tsx'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Upload from "./ui/upload/upload.tsx";
 import NavigationMenu from "./common/header/header.tsx";
-import ArgumentResults from "./ui/arguments/arguments.tsx";
+// import ArgumentResults from "./ui/arguments/arguments.tsx";
+import TabHeaders from "./ui/arguments/tabHeader.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -15,7 +16,8 @@ createRoot(document.getElementById('root')!).render(
           <Routes>
               <Route path='/' element={<App />}></Route>
               <Route path='/upload' element={<Upload />}></Route>
-              <Route path='/arguments' element={<ArgumentResults />} ></Route>
+              {/*<Route path='/arguments' element={<ArgumentResults />} ></Route>*/}
+              <Route path='/arguments' element={<TabHeaders />} ></Route>
           </Routes>
       </Router>
     {/*<App />*/}
