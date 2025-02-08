@@ -4,7 +4,6 @@ import ArgumentRelations from "./relations.tsx";
 import ArgumentComparison from "./comparison.tsx";
 import ArgumentList from "./argumentList.tsx";
 import {useLocation} from "react-router-dom";
-import argumentList from "./argumentList.tsx";
 
 type TabProps = {
     tabIndex?: number;
@@ -14,7 +13,7 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
     // State to manage the selected tab index
   const [selectedTab, setSelectedTab] = useState(tabIndex ?? 0);
   const location = useLocation();
-  const { sections, argumentList } = location.state;
+  const { sections, argumentList, relations } = location.state;
 
   // Define the tab headings
   const tabs = ["Sections", "Arguments", "Relations", "Global / Local Arguments"];
@@ -51,9 +50,9 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
 
             {/* Render the content based on the active tab */}
             <div style={{padding: "20px"}}>
-                {selectedTab === 0 && <ArgumentResults />}
+                {selectedTab === 0 && <ArgumentResults propSections={sections} />}
                 {selectedTab === 1 && <ArgumentList argumentList={argumentList} />}
-                {selectedTab === 2 && <ArgumentResults />}
+                {selectedTab === 2 && <ArgumentRelations relations={relations} />}
                 {selectedTab === 3 && <ArgumentComparison/>}
             </div>
         </div>

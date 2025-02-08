@@ -2,8 +2,6 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {useLocation} from "react-router-dom";
 import {Section, Argument as MainArgument} from "../../models/FileInput.ts";
-import {SampleArgument, SampleSection} from "../../models/sampleModels.ts";
-import {SectionData} from "../../data/sampleData.ts"; // Ensure Bootstrap is installed in your project
 // import "./upload_pdf.css"; // Replace with the correct path to your CSS file
 
 // Define the types for the argument data
@@ -54,7 +52,10 @@ const formatBodyWithStyles = (
   const fragments: JSX.Element[] = [];
   let currentIndex = 0;
 
-  argumentComps.forEach(({ start, end, type }, index) => {
+  console.log(argumentComps)
+  const validArgumentComps = argumentComps.filter(comp => comp.start > -1 && comp.end > -1)
+
+  validArgumentComps.forEach(({ start, end, type }, index) => {
     // Capture the text before the current span
     if (currentIndex < start) {
       fragments.push(
@@ -63,14 +64,6 @@ const formatBodyWithStyles = (
         </span>
       );
     }
-
-    // Apply styling based on type
-    // const style = (() => {
-    //   if (type === "background_claim") return { color: "green", 'font-weight': 'bold' }; // Green for background_claim
-    //   if (type === "own_claim") return { color: "yellow", 'font-weight': 'bold' }; // Yellow for own_claim
-    //   if (type === "data") return { color: "blue", 'font-weight': 'bold' }; // Blue for data
-    //   return {}; // Default style
-    // })();
 
     const getStyle = () => {
       const trimmed_type = type.trim()

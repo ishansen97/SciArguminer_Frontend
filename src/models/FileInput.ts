@@ -8,7 +8,8 @@ export type FileInputResponse = {
     status: HttpStatusCode
     message: string;
     sections: Section[];
-    arguments: Argument[]
+    arguments: Argument[];
+    relations: Relation[];
 }
 
 export type Section = {
@@ -16,6 +17,7 @@ export type Section = {
     body: string;
     inferenced_text: string[];
     arguments: Argument[];
+    relations: Relation[];
 }
 
 export type Argument = {
@@ -23,4 +25,10 @@ export type Argument = {
     start: number;
     end: number;
     type: string;
+}
+
+export type Relation = {
+    head: Argument;
+    tail: Argument;
+    relation: string;
 }

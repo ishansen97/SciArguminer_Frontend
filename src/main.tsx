@@ -8,6 +8,7 @@ import Upload from "./ui/upload/upload.tsx";
 import NavigationMenu from "./common/header/header.tsx";
 // import ArgumentResults from "./ui/arguments/arguments.tsx";
 import TabHeaders from "./ui/arguments/tabHeader.tsx";
+import PastResults from "./ui/results/history.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')!).render(
               <Route path='/upload' element={<Upload />}></Route>
               {/*<Route path='/arguments' element={<ArgumentResults />} ></Route>*/}
               <Route path='/arguments' element={<TabHeaders />} ></Route>
+              <Route path='/history' element={<PastResults />} ></Route>
           </Routes>
       </Router>
     {/*<App />*/}

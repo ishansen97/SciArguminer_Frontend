@@ -31,8 +31,8 @@ function NavigationMenu() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/about">
-                About
+              <Link className="nav-link" to="/history">
+                Past Results
               </Link>
             </li>
           </ul>

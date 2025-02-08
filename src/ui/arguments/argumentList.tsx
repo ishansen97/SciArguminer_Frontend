@@ -6,8 +6,8 @@ interface ArgumentListProps {
 }
 
 const ArgumentList: React.FC<ArgumentListProps> = ({argumentList}) => {
-    return argumentList.map((arg, index) => <div className='card'>
-        <div className='card-body bg-body-secondary' key={`arg-${index}`}>
+    return argumentList.map((arg, index) => <div className='card' key={`arg-${index}`}>
+        <div className='card-body bg-body-secondary' >
             <div className='card-text'>
                 <h4>{arg.text}</h4>
                 <p className='card-subtitle'>{arg.type}</p>

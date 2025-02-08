@@ -81,7 +81,8 @@ const PdfUpload: React.FC = () => {
     navigate('/arguments', {
       state: {
         sections: response.sections,
-        argumentList: response.arguments
+        argumentList: response.arguments,
+        relations: response.relations
       }
     })
   }
@@ -108,7 +109,7 @@ const PdfUpload: React.FC = () => {
           Choose Files
         </button>
       </div>
-      {fileName && <div id="file-name" className={`mt-3 text-center ${validFile ? 'text-danger' : ''}`}>{fileName}</div>}
+      {fileName && <div id="file-name" className={`mt-3 text-center ${validFile ? 'text-success' : 'text-danger'}`}>{fileName}</div>}
       <form onSubmit={isPending ? undefined : handleSubmit}>
         <div className="container mt-5 text-center">
           <button
