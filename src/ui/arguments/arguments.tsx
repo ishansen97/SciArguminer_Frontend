@@ -16,13 +16,13 @@ interface ArgumentResultsProps {
 }
 
 const ArgumentResults: React.FC<ArgumentResultsProps> = ({ propSections }) => {
-    const location = useLocation();
-    const { sections } = location.state;
-    // const sections = SectionData
+    // const location = useLocation();
+    // const { sections } = location.state;
+    const sections: Argument[] = []
     const resultArguments = propSections ?? sections;
     // const resultArguments = SectionData;
   return (
-    <div className="container mt-5">
+    <div className="container mt-3">
       <h1 className="text-center mb-4">Argument Results</h1>
       <div className="row">
         {resultArguments && resultArguments.map((argument: Section, index: number) => (

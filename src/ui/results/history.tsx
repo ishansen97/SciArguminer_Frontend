@@ -36,7 +36,6 @@ const PastResults: React.FC = () => {
 	}
 
 	useEffect(() => {
-		console.log('Im called')
 		const request: HistoryRequest = {
 			fromDate: fromDate,
 			toDate: toDate
@@ -61,7 +60,7 @@ const PastResults: React.FC = () => {
 	return (
 		<div className="max-w-3xl mx-auto mt-10 container">
 			{/* Title */}
-			<h2 className="text-2xl font-bold text-center mb-6 mt-4">View Past Results</h2>
+			<h2 className="text-2xl font-bold text-center mb-6 mt-4 mb-4 text-primary bg-body-tertiary">View Past Results</h2>
 
 			{/* Date Filter Section */}
 			<div className="flex items-center justify-content-between gap-5 mb-6">
@@ -95,9 +94,11 @@ const PastResults: React.FC = () => {
 			<div className="border border-gray-300 rounded-lg overflow-hidden">
 				{items.map((result) => (
 					<div key={result.id} className="card-body justify-between items-center p-4 border-bottom">
-                <span className="fw-bold">
-                  {result.paper} <span className="text-gray-600">({result.date})</span>
-                </span>
+						<span className="fw-bold">
+						  {result.paper}
+						</span>
+						<br/>
+						<span className="card-subtitle text-gray-600">{result.date.split('T')[0]}</span>
 						{/* Centered Report Button */}
 						<button
 							className="bg-white float-end border border-black p-2 flex items-center justify-center h-full flex-shrink-0">

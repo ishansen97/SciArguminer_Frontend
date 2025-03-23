@@ -10,6 +10,7 @@ export type FileInputResponse = {
     sections: Section[];
     arguments: Argument[];
     relations: Relation[];
+    summary: Summary;
 }
 
 export type Section = {
@@ -18,6 +19,7 @@ export type Section = {
     inferenced_text: string[];
     arguments: Argument[];
     relations: Relation[];
+    summary: Summary;
 }
 
 export type Argument = {
@@ -31,4 +33,18 @@ export type Relation = {
     head: Argument;
     tail: Argument;
     relation: string;
+}
+
+export type Summary = {
+    arguments: SummaryInfo;
+    relations: SummaryInfo;
+    // globalLocal: {
+    //     globalArguments: SummaryInfo;
+    //     localArguments: SummaryInfo;
+    // };
+}
+
+export type SummaryInfo = {
+    totalCount: number;
+    [arg: string]: number;
 }
