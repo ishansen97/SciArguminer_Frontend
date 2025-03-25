@@ -7,6 +7,7 @@ import {useLocation} from "react-router-dom";
 import ModalComp from "../../common/modals/modal.tsx";
 import {Summary} from "../../models/FileInput.ts";
 import ArgumentSummary from "../summary/argumentSummary.tsx";
+import {ReportApi} from "../../service/reportApi.ts";
 
 type TabProps = {
     tabIndex?: number;
@@ -23,7 +24,15 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
     const [modalOpen, setModalOpen] = useState(false);
     const location = useLocation();
 
+    // const obj = {
+    //     sections: [],
+    //     argumentList: [],
+    //     relations: [],
+    //     summary: {}
+    // }
+
     const { sections, argumentList, relations, summary } = location.state;
+    // const { sections, argumentList, relations, summary } = obj;
 
     // Define the tab headings
     const tabs = ["Sections", "Arguments", "Relations", "Global / Local Arguments"];
@@ -37,11 +46,23 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
         setModalOpen(!modalOpen);
     }
 
-    const handleSaveReport = () => {
+    const handleSaveReport = async() => {
         const confirmation = confirm('Once you save the results, it will be publicly accessible. Are you sure you want to continue?');
 
         if (confirmation) {
-            alert('hooray')
+            const promptResult = prompt('Please enter the Report Name.')
+            if (promptResult) {
+                const response = await ReportApi.saveReport({
+                    reportName: promptResult,
+                    arguments: argumentList,
+                    relations: relations,
+                    summary: summary,
+                })
+
+                if (response.status === 200) {
+                    alert('hooray')
+                }
+            }
         }
     }
 
@@ -88,8 +109,8 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
 
             {/* Modal */}
             <ModalComp key='argumentSummaryModal' isOpen={modalOpen} onClose={() => setModalOpen(false)} title={'Argument Summary'}>
-                {/*<ArgumentSummary argumentInfo={SummaryData.arguments} relations={SummaryData.relations} />*/}
-                <ArgumentSummary argumentInfo={summary.arguments} relations={summary.relations} />
+                <ArgumentSummary argumentInfo={SummaryData.arguments} relations={SummaryData.relations} />
+                {/*<ArgumentSummary argumentInfo={summary.arguments} relations={summary.relations} />*/}
             </ModalComp>
         </div>
     )
