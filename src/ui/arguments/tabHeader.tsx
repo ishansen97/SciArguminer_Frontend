@@ -3,7 +3,7 @@ import ArgumentResults from "./arguments.tsx";
 import ArgumentRelations from "./relations.tsx";
 import ArgumentComparison from "./comparison.tsx";
 import ArgumentList from "./argumentList.tsx";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import ModalComp from "../../common/modals/modal.tsx";
 import {Summary} from "../../models/FileInput.ts";
 import ArgumentSummary from "../summary/argumentSummary.tsx";
@@ -20,6 +20,7 @@ const SummaryData: Summary = {
 
 const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
     // State to manage the selected tab index
+    const navigate = useNavigate();
     const [selectedTab, setSelectedTab] = useState(tabIndex ?? 0);
     const [modalOpen, setModalOpen] = useState(false);
     const location = useLocation();
@@ -60,7 +61,7 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
                 })
 
                 if (response.status === 200) {
-                    alert('hooray')
+                    navigate('/upload')
                 }
             }
         }
@@ -109,8 +110,8 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
 
             {/* Modal */}
             <ModalComp key='argumentSummaryModal' isOpen={modalOpen} onClose={() => setModalOpen(false)} title={'Argument Summary'}>
-                <ArgumentSummary argumentInfo={SummaryData.arguments} relations={SummaryData.relations} />
-                {/*<ArgumentSummary argumentInfo={summary.arguments} relations={summary.relations} />*/}
+                {/*<ArgumentSummary argumentInfo={SummaryData.arguments} relations={SummaryData.relations} />*/}
+                <ArgumentSummary argumentInfo={summary.arguments} relations={summary.relations} />
             </ModalComp>
         </div>
     )
