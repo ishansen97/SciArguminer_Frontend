@@ -1,4 +1,4 @@
-import {Argument, Relation, SummaryInfo} from "./FileInput.ts";
+import {Argument, Relation, Summary, SummaryInfo} from "./FileInput.ts";
 import {HttpStatusCode} from "axios";
 
 export type ReportRequest = {
@@ -11,4 +11,29 @@ export type ReportRequest = {
 export type ReportResponse = {
 	status: HttpStatusCode;
 	message: string;
+}
+
+export type PublicReportRequest = {
+	fromDate?: string;
+    toDate?: string;
+}
+
+export type PublicReportResponse = {
+	status: HttpStatusCode;
+	records: Report[];
+}
+
+export type ReportSummaryRequest = {
+	reportId: number;
+}
+
+export type ReportSummaryResponse = {
+	status: HttpStatusCode;
+	summary: Summary;
+}
+
+export type Report = {
+	id: number;
+	name: string;
+	date: string;
 }

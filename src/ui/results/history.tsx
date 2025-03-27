@@ -2,9 +2,12 @@ import React, {useEffect, useState} from "react";
 import SortAscIcon from '../../assets/images/sort_asc.png'
 import SortDescIcon from '../../assets/images/sort_desc.png'
 import ReportIcon from '../../assets/images/business-report.png'
-import {HistoryApi} from "../../service/historyApi.ts";
 import {HttpStatusCode} from "axios";
-import {History, HistoryRequest} from "../../models/History.ts";
+import {PublicReportRequest, Report, ReportSummaryRequest} from "../../models/report.ts";
+import {ReportApi} from "../../service/reportApi.ts";
+import ModalComp from "../../common/modals/modal.tsx";
+import ArgumentSummary from "../summary/argumentSummary.tsx";
+import {Summary, SummaryInfo} from "../../models/FileInput.ts";
 
 interface SampleResult {
 	id: number;
@@ -26,17 +29,19 @@ const PastResults: React.FC = () => {
 	const [toDate, setToDate] = useState<string | undefined>(undefined);
 	const [sortIcon, setSortIcon] = useState(SortAscIcon);
 	const [ascending, setAscending] = useState(false);
-	const [items, setItems] = useState<History[]>([])
+	const [items, setItems] = useState<Report[]>([])
+	const [modalOpen, setModalOpen] = useState<boolean>(false);
+	const [summary, setSummary] = useState<Summary>();
 
-	const getHistory = async(request: HistoryRequest) => {
-		const response = await HistoryApi.getHistoryResults(request);
+	const getHistory = async(request: PublicReportRequest) => {
+		const response = await ReportApi.getPublicReports(request);
 		if (response.status == HttpStatusCode.Ok) {
 			setItems(response.records)
 		}
 	}
 
 	useEffect(() => {
-		const request: HistoryRequest = {
+		const request: PublicReportRequest = {
 			fromDate: fromDate,
 			toDate: toDate
 		}
@@ -47,14 +52,23 @@ const PastResults: React.FC = () => {
 		setAscending(!ascending);
 		let predicate = null;
 		if (ascending) {
-			predicate = (a: History, b: History) => a.id - b.id
+			predicate = (a: Report, b: Report) => a.id - b.id
 			setSortIcon(SortAscIcon)
 		}
 		else {
-			predicate = (a: History, b: History) => b.id - a.id
+			predicate = (a: Report, b: Report) => b.id - a.id
 			setSortIcon(SortDescIcon)
 		}
 		setItems(prevResults => prevResults.sort(predicate))
+	}
+
+	const handleSummary = async (id: number) => {
+		const request: ReportSummaryRequest = {reportId: id}
+		const response = await ReportApi.getReportSummary(request);
+		if (response.status == HttpStatusCode.Ok) {
+			setSummary(response.summary)
+			setModalOpen(true)
+		}
 	}
 
 	return (
@@ -94,16 +108,23 @@ const PastResults: React.FC = () => {
 			<div className="border border-gray-300 rounded-lg overflow-hidden">
 				{items.map((result) => (
 					<div key={result.id} className="card-body justify-between items-center p-4 border-bottom">
-						<span className="fw-bold">
-						  {result.paper}
-						</span>
-						<br/>
-						<span className="card-subtitle text-gray-600">{result.date.split('T')[0]}</span>
-						{/* Centered Report Button */}
-						<button
-							className="bg-white float-end border border-black p-2 flex items-center justify-center h-full flex-shrink-0">
-							<img src={ReportIcon} alt="Report icon" width="30px" height="30px"/>
-						</button>
+						<div className='row'>
+							<div className='col-8'>
+								<span className="fw-bold">
+								  {result.name}
+								</span>
+								<br/>
+								<span className="card-subtitle text-gray-600">{result.date}</span>
+							</div>
+							<div className='col-4'>
+								{/* Centered Report Button */}
+								<button
+									className="bg-white float-end border border-black p-2 flex items-center justify-center h-full flex-shrink-0">
+									<img src={ReportIcon} alt="Report icon" width="30px" height="30px"
+									onClick={() => handleSummary(result.id)}/>
+								</button>
+							</div>
+						</div>
 					</div>
 				))}
 			</div>
@@ -116,6 +137,12 @@ const PastResults: React.FC = () => {
 				<button className="px-3 py-1 bg-primary text-white rounded mx-1">3</button>
 				<button className="px-3 py-1 bg-primary text-white rounded ml-2">{">"}</button>
 			</div>
+
+			{/* Modal */}
+			{summary && <ModalComp key='argumentSummaryModal' isOpen={modalOpen} onClose={() => setModalOpen(false)} title={'Argument Summary'}>
+                {/*<ArgumentSummary argumentInfo={SummaryData.arguments} relations={SummaryData.relations} />*/}
+                <ArgumentSummary argumentInfo={summary.arguments} relations={summary.relations} />
+            </ModalComp>}
 		</div>
 	);
 };
