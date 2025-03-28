@@ -2,12 +2,13 @@ import React, {useEffect, useState} from "react";
 import SortAscIcon from '../../assets/images/sort_asc.png'
 import SortDescIcon from '../../assets/images/sort_desc.png'
 import ReportIcon from '../../assets/images/business-report.png'
+import PDFIcon from '../../assets/images/pdf-icon.svg';
 import {HttpStatusCode} from "axios";
 import {PublicReportRequest, Report, ReportSummaryRequest} from "../../models/report.ts";
 import {ReportApi} from "../../service/reportApi.ts";
-import ModalComp from "../../common/modals/modal.tsx";
 import ArgumentSummary from "../summary/argumentSummary.tsx";
-import {Summary, SummaryInfo} from "../../models/FileInput.ts";
+import {Summary} from "../../models/FileInput.ts";
+import ReactModal from "../../common/modals/reactModal.tsx";
 
 interface SampleResult {
 	id: number;
@@ -63,12 +64,18 @@ const PastResults: React.FC = () => {
 	}
 
 	const handleSummary = async (id: number) => {
+		console.log('summary clicked');
 		const request: ReportSummaryRequest = {reportId: id}
 		const response = await ReportApi.getReportSummary(request);
 		if (response.status == HttpStatusCode.Ok) {
 			setSummary(response.summary)
 			setModalOpen(true)
 		}
+	}
+
+	const handleOnClose = () => {
+		// setSummary(undefined)
+		setModalOpen(false)
 	}
 
 	return (
@@ -119,10 +126,19 @@ const PastResults: React.FC = () => {
 							<div className='col-4'>
 								{/* Centered Report Button */}
 								<button
-									className="bg-white float-end border border-black p-2 flex items-center justify-center h-full flex-shrink-0">
+									key={`btn-${result.id}`}
+									title='View Summary'
+									className="bg-white float-end border border-black p-2 m-1 flex items-center justify-center h-full flex-shrink-0">
 									<img src={ReportIcon} alt="Report icon" width="30px" height="30px"
 									onClick={() => handleSummary(result.id)}/>
 								</button>
+								<button
+									key={`btn-download-${result.id}`}
+									title='Download Report'
+									className="bg-white float-end border border-black p-2 m-1 flex items-center justify-center h-full flex-shrink-0">
+									<img src={PDFIcon} alt="Report icon" width="30px" height="30px"/>
+								</button>
+
 							</div>
 						</div>
 					</div>
@@ -138,11 +154,10 @@ const PastResults: React.FC = () => {
 				<button className="px-3 py-1 bg-primary text-white rounded ml-2">{">"}</button>
 			</div>
 
-			{/* Modal */}
-			{summary && <ModalComp key='argumentSummaryModal' isOpen={modalOpen} onClose={() => setModalOpen(false)} title={'Argument Summary'}>
-                {/*<ArgumentSummary argumentInfo={SummaryData.arguments} relations={SummaryData.relations} />*/}
-                <ArgumentSummary argumentInfo={summary.arguments} relations={summary.relations} />
-            </ModalComp>}
+			{summary && <ReactModal isOpen={modalOpen} onClose={handleOnClose} title={'Argument Summary'}>
+				<ArgumentSummary argumentInfo={summary.arguments} relations={summary.relations} />
+			</ReactModal>}
+
 		</div>
 	);
 };

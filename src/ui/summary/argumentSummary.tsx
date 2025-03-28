@@ -15,10 +15,10 @@ function getInfo(summaryInfo: SummaryInfo, title: string): JSX.Element  {
 			<div className='card-body align-items-start'>
 				{Object.keys(summaryInfo).map((item, _) => <div className='row'>
 					{item === 'totalCount' && <span className='mt-2'></span>}
-					<div className='col-8'>
+					<div key={`label-${title}-${item}`} className='col-8'>
 						<span>{item === 'totalCount' ? 'total count' : item}</span>
 					</div>
-					<div className='col-4'>
+					<div key={`item-${title}-${item}`}  className='col-4'>
 						<span>{summaryInfo[item]}</span>
 					</div>
 				</div>)}

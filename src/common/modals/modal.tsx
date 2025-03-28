@@ -1,14 +1,15 @@
-import { useEffect, useRef } from 'react';
+import {FC, ReactNode, useEffect, useRef} from 'react';
 import { Modal } from 'bootstrap';
 
 interface BootstrapModalProps {
+  id: string;
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const BootstrapModal: React.FC<BootstrapModalProps> = ({ isOpen, onClose, title, children }) => {
+const BootstrapModal: FC<BootstrapModalProps> = ({ id, isOpen, onClose, title, children }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const bsModalRef = useRef<Modal | null>(null);
 
@@ -26,6 +27,7 @@ const BootstrapModal: React.FC<BootstrapModalProps> = ({ isOpen, onClose, title,
 
     return () => {
       if (modalRef.current) {
+        console.log('removing')
         modalRef.current.removeEventListener('hidden.bs.modal', onClose);
       }
     };
@@ -42,7 +44,7 @@ const BootstrapModal: React.FC<BootstrapModalProps> = ({ isOpen, onClose, title,
   }, [isOpen]);
 
   return (
-    <div className="modal fade" tabIndex={-1} ref={modalRef}>
+    <div id={id} className="modal fade" tabIndex={-1} ref={modalRef}>
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">

@@ -4,10 +4,11 @@ import ArgumentRelations from "./relations.tsx";
 import ArgumentComparison from "./comparison.tsx";
 import ArgumentList from "./argumentList.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
-import ModalComp from "../../common/modals/modal.tsx";
 import {Summary} from "../../models/FileInput.ts";
 import ArgumentSummary from "../summary/argumentSummary.tsx";
 import {ReportApi} from "../../service/reportApi.ts";
+import ReactModal from "../../common/modals/reactModal.tsx";
+import SaveReport from "../prompts/saveReport.tsx";
 
 type TabProps = {
     tabIndex?: number;
@@ -23,6 +24,9 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
     const navigate = useNavigate();
     const [selectedTab, setSelectedTab] = useState(tabIndex ?? 0);
     const [modalOpen, setModalOpen] = useState(false);
+    const [saveModalOpen, setSaveModalOpen] = useState(false);
+    const [reportName, setReportName] = useState("");
+    const [authorNames, setAuthorNames] = useState("");
     const location = useLocation();
 
     // const obj = {
@@ -51,20 +55,26 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
         const confirmation = confirm('Once you save the results, it will be publicly accessible. Are you sure you want to continue?');
 
         if (confirmation) {
-            const promptResult = prompt('Please enter the Report Name.')
-            if (promptResult) {
-                const response = await ReportApi.saveReport({
-                    reportName: promptResult,
-                    arguments: argumentList,
-                    relations: relations,
-                    summary: summary,
-                })
+            setSaveModalOpen(true);
+        }
+    }
 
-                if (response.status === 200) {
-                    navigate('/upload')
-                }
+    const onSaveReport = async (shouldSave: boolean) => {
+        if (shouldSave) {
+            const response = await ReportApi.saveReport({
+                reportName: reportName,
+                authorNames: authorNames,
+                arguments: argumentList,
+                relations: relations,
+                summary: summary,
+            })
+
+            if (response.status === 200) {
+                navigate('/upload')
             }
         }
+
+        setSaveModalOpen(false);
     }
 
     return (
@@ -108,11 +118,18 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
                 {selectedTab === 3 && <ArgumentComparison/>}
             </div>
 
-            {/* Modal */}
-            <ModalComp key='argumentSummaryModal' isOpen={modalOpen} onClose={() => setModalOpen(false)} title={'Argument Summary'}>
-                {/*<ArgumentSummary argumentInfo={SummaryData.arguments} relations={SummaryData.relations} />*/}
+            <ReactModal isOpen={modalOpen} title={'Argument Summary'} onClose={() => setModalOpen(false)}>
                 <ArgumentSummary argumentInfo={summary.arguments} relations={summary.relations} />
-            </ModalComp>
+            </ReactModal>
+
+            <ReactModal isOpen={saveModalOpen} title={'Save Report'} onClose={() => setSaveModalOpen(false)}>
+                <SaveReport reportName={reportName}
+                            authorNames={authorNames}
+                            setReportName={setReportName}
+                            setAuthorName={setAuthorNames}
+                            onSave={onSaveReport}
+                />
+            </ReactModal>
         </div>
     )
 }

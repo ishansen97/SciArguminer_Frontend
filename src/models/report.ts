@@ -3,6 +3,7 @@ import {HttpStatusCode} from "axios";
 
 export type ReportRequest = {
 	reportName: string;
+	authorNames: string;
 	arguments: Argument[];
 	relations: Relation[];
 	summary: SummaryInfo;
