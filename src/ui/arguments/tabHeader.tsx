@@ -27,6 +27,7 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
     const [saveModalOpen, setSaveModalOpen] = useState(false);
     const [reportName, setReportName] = useState("");
     const [authorNames, setAuthorNames] = useState("");
+    const [buttonsDisabled, setButtonsDisabled] = useState(false);
     const location = useLocation();
 
     // const obj = {
@@ -59,8 +60,21 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
         }
     }
 
+    const handleDownloadReport = async() => {
+        setButtonsDisabled(true);
+        await ReportApi.downloadProcessedReport({
+            reportName: '',
+            authorNames: '',
+            arguments: argumentList,
+            relations: relations,
+            summary: summary,
+        })
+        setButtonsDisabled(false);
+    }
+
     const onSaveReport = async (shouldSave: boolean) => {
         if (shouldSave) {
+            setButtonsDisabled(true);
             const response = await ReportApi.saveReport({
                 reportName: reportName,
                 authorNames: authorNames,
@@ -70,6 +84,7 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
             })
 
             if (response.status === 200) {
+                setButtonsDisabled(false);
                 navigate('/upload')
             }
         }
@@ -104,8 +119,8 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
             </nav>
             <nav className='text-center mt-3'>
                 <button className='btn btn-success m-1' onClick={handleModalOpen}>View Summary</button>
-                <button className='btn btn-primary m-1' onClick={handleSaveReport}>Save Report</button>
-                <button className='btn btn-secondary m-1'>Download Report</button>
+                <button className='btn btn-primary m-1' onClick={handleSaveReport} disabled={buttonsDisabled}>Save Report</button>
+                <button className='btn btn-secondary m-1' onClick={handleDownloadReport} disabled={buttonsDisabled}>Download Report</button>
                 {/*<div className='btn-group'>*/}
                 {/*</div>*/}
             </nav>

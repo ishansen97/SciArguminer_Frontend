@@ -78,6 +78,10 @@ const PastResults: React.FC = () => {
 		setModalOpen(false)
 	}
 
+	const handleDownload = async(reportId: number) => {
+		await ReportApi.downloadReport({reportId: reportId})
+	}
+
 	return (
 		<div className="max-w-3xl mx-auto mt-10 container">
 			{/* Title */}
@@ -135,7 +139,8 @@ const PastResults: React.FC = () => {
 								<button
 									key={`btn-download-${result.id}`}
 									title='Download Report'
-									className="bg-white float-end border border-black p-2 m-1 flex items-center justify-center h-full flex-shrink-0">
+									className="bg-white float-end border border-black p-2 m-1 flex items-center justify-center h-full flex-shrink-0"
+									onClick={() => handleDownload(result.id)}>
 									<img src={PDFIcon} alt="Report icon" width="30px" height="30px"/>
 								</button>
 

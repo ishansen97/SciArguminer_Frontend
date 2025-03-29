@@ -33,6 +33,10 @@ export type ReportSummaryResponse = {
 	summary: Summary;
 }
 
+export type ReportDownloadRequest = {
+	reportId: number;
+}
+
 export type Report = {
 	id: number;
 	name: string;
