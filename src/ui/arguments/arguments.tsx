@@ -70,7 +70,7 @@ const formatBodyWithStyles = (
       if (trimmed_type === "background_claim") {
         return { color: "green", fontWeight: 'bold' }; // Green for background_claim
       }
-      if (trimmed_type === "own_claim") return { color: "yellow", fontWeight: 'bold' }; // Yellow for own_claim
+      if (trimmed_type === "own_claim") return { color: "red", fontWeight: 'bold' }; // Yellow for own_claim
       if (trimmed_type === "data") return { color: "blue", fontWeight: 'bold' }; // Blue for data
       return {};
     }

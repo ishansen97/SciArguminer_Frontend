@@ -11,6 +11,7 @@ export type FileInputResponse = {
     arguments: Argument[];
     relations: Relation[];
     summary: Summary;
+    globalArguments: Argument[];
 }
 
 export type Section = {

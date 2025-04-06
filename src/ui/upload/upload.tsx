@@ -83,7 +83,8 @@ const PdfUpload: React.FC = () => {
         sections: response.sections,
         argumentList: response.arguments,
         relations: response.relations,
-        summary: response.summary
+        summary: response.summary,
+        globalArguments: response.globalArguments,
       }
     })
   }

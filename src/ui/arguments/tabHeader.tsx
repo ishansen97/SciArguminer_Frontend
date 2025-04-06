@@ -37,7 +37,7 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
     //     summary: {}
     // }
 
-    const { sections, argumentList, relations, summary } = location.state;
+    const { sections, argumentList, relations, summary, globalArguments } = location.state;
     // const { sections, argumentList, relations, summary } = obj;
 
     // Define the tab headings
@@ -130,7 +130,7 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
                 {selectedTab === 0 && <ArgumentResults propSections={sections}/>}
                 {selectedTab === 1 && <ArgumentList argumentList={argumentList}/>}
                 {selectedTab === 2 && <ArgumentRelations relations={relations}/>}
-                {selectedTab === 3 && <ArgumentComparison/>}
+                {selectedTab === 3 && <ArgumentComparison globalArguments={globalArguments} />}
             </div>
 
             <ReactModal isOpen={modalOpen} title={'Argument Summary'} onClose={() => setModalOpen(false)}>
