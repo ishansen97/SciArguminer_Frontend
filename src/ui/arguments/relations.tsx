@@ -14,7 +14,7 @@ const ArgumentRelations: React.FC<RelationProps> = ({relations}) => {
         return trimmedType === "supports"
           ? { color: "green", fontWeight: "bold" }
           : trimmedType === "contradicts"
-          ? { color: "yellow", fontWeight: "bold" }
+          ? { color: "red", fontWeight: "bold" }
           : trimmedType === "semantically_same"
           ? { color: "blue", fontWeight: "bold" }
           : {}; // Default empty object
