@@ -85,6 +85,7 @@ const PdfUpload: React.FC = () => {
         relations: response.relations,
         summary: response.summary,
         globalArguments: response.globalArguments,
+        globalZones: response.globalZones
       }
     })
   }
