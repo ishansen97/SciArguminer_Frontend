@@ -1,15 +1,27 @@
-import {Argument, ZoneLabel} from "../../models/FileInput";
-import {FC} from "react";
+import {Argument, GlobalLocalInfo, ZoneLabel} from "../../models/FileInput";
+import {FC, useState} from "react";
 
 interface GlobalLocalArgProps {
     globalArguments: Argument[]
     globalZones: ZoneLabel[]
+    globalLocalArgumentInfo: GlobalLocalInfo
 }
 
-const ArgumentComparison: FC<GlobalLocalArgProps> = ({globalArguments, globalZones}) => {
+interface LocalArgumentProps {
+    localArguments: {argument: Argument, similarity: string}[];
+}
+
+const ArgumentComparison: FC<GlobalLocalArgProps> = ({globalArguments, globalZones, globalLocalArgumentInfo}) => {
+    const [globalSelected, setGlobalSelected] = useState<boolean>(false)
+    const [localInfo, setLocalInfo] = useState<{argument: Argument, similarity: string}[]>()
+
+    const handleGlobalClick = (id: number) => {
+        setGlobalSelected(true);
+        setLocalInfo(globalLocalArgumentInfo[id]);
+    }
+
     const getZoneColor = (label: string) => {
         let color = ''
-        console.log(`label: ${label}`)
         switch (label) {
             case 'METHODS':
                 color = 'success';
@@ -45,14 +57,32 @@ const ArgumentComparison: FC<GlobalLocalArgProps> = ({globalArguments, globalZon
                     {globalZones.map((zoneLabel: ZoneLabel, index: number) =>
                         <div className='card-body bg-body-secondary mb-3'>
                             <h5 className='card-text'>{zoneLabel.sentence}</h5>
-                            <span className={`card-subtitle text-${getZoneColor(zoneLabel.label)}`}>{zoneLabel.label}</span>
+                            <button className='btn btn-link' onClick={() => handleGlobalClick(index+1)}>
+                                <span className={`card-subtitle text-${getZoneColor(zoneLabel.label)}`}>{zoneLabel.label}</span>
+                            </button>
                         </div>
                     )}
 
                 </div>
                 <div className='col-5 card'>
                     <h3 className='text-warning'>Local Arguments</h3>
+                    {globalSelected && localInfo ?  <LocalArgumentComp localArguments={localInfo} />
+                        : <span className='text-center bg-body-tertiary'>No Global Argument Selected</span>}
                 </div>
+            </div>
+        </div>
+    )
+}
+
+const LocalArgumentComp: FC<LocalArgumentProps> = ({localArguments}) => {
+    return localArguments.map((arg, index) =>
+        <div className='card bg-light'>
+            <div className='card-body'>
+                <p>Zone Label: {arg.argument.zone}</p>
+                <p>Argument Type: {arg.argument.type}</p>
+                <p>Text: {arg.argument.text}</p>
+                <p>Section: {arg.argument.title}</p>
+                <p>Similarity: {arg.similarity}</p>
             </div>
         </div>
     )

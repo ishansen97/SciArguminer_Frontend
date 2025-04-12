@@ -7,7 +7,7 @@ export class FileApi {
         // const request: FileInputRequest = {
         //     file: file,
         // }
-        console.log(Array.from(file.entries()));
+        // console.log(Array.from(file.entries()));
         const response: FileInputResponse = await ApiClient.postFile('/api/v1/file', file);
         console.log(`file input response: ${response}`);
         return response;

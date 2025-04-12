@@ -12,7 +12,8 @@ export type FileInputResponse = {
     relations: Relation[];
     summary: Summary;
     globalArguments: Argument[];
-    globalZones: ZoneLabel[]
+    globalZones: ZoneLabel[];
+    globalLocalArgumentInfo: GlobalLocalInfo;
 }
 
 export type Section = {
@@ -29,6 +30,8 @@ export type Argument = {
     start: number;
     end: number;
     type: string;
+    title: string;
+    zone: string;
 }
 
 export type Relation = {
@@ -41,6 +44,13 @@ export type ZoneLabel = {
     label: string;
     sentence: string;
     section: string;
+}
+
+export type GlobalLocalInfo = {
+    [key: number]: Array<{
+        argument: Argument;
+        similarity: string;
+    }>;
 }
 
 export type Summary = {
