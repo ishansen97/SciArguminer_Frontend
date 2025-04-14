@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import SortAscIcon from '../../assets/images/sort_asc.png'
 import SortDescIcon from '../../assets/images/sort_desc.png'
 import ReportIcon from '../../assets/images/business-report.png'
@@ -9,6 +9,9 @@ import {ReportApi} from "../../service/reportApi.ts";
 import ArgumentSummary from "../summary/argumentSummary.tsx";
 import {Summary} from "../../models/FileInput.ts";
 import ReactModal from "../../common/modals/reactModal.tsx";
+import Loader from "../../common/loader/loader.tsx";
+import {Simulate} from "react-dom/test-utils";
+import load = Simulate.load;
 
 interface SampleResult {
 	id: number;
@@ -32,12 +35,15 @@ const PastResults: React.FC = () => {
 	const [ascending, setAscending] = useState(false);
 	const [items, setItems] = useState<Report[]>([])
 	const [modalOpen, setModalOpen] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [summary, setSummary] = useState<Summary>();
 
 	const getHistory = async(request: PublicReportRequest) => {
+		setLoading(true);
 		const response = await ReportApi.getPublicReports(request);
 		if (response.status == HttpStatusCode.Ok) {
 			setItems(response.records)
+			setLoading(false);
 		}
 	}
 
@@ -64,7 +70,6 @@ const PastResults: React.FC = () => {
 	}
 
 	const handleSummary = async (id: number) => {
-		console.log('summary clicked');
 		const request: ReportSummaryRequest = {reportId: id}
 		const response = await ReportApi.getReportSummary(request);
 		if (response.status == HttpStatusCode.Ok) {
@@ -103,21 +108,29 @@ const PastResults: React.FC = () => {
 					value={toDate}
 					onChange={(e) => setToDate(e.target.value)}
 				/>
-				<button className="ml-2 text-gray-200 hover:text-gray-800 float-end border-black" onClick={handleSortIcon}>
+				{!loading && items.length > 0 && <button className="ml-2 text-gray-200 hover:text-gray-800 float-end border-black" onClick={handleSortIcon}>
 					{/*&#x2630; /!* Filter icon *!/*/}
 					<img src={sortIcon} alt="Sort Icon" width='28px' height='28px'/>
-				</button>
+				</button>}
 				{/*<button className="bg-primary text-white mx-4 py-2 rounded float-end" onClick={handleFilterButton}>*/}
 				{/*	Filter*/}
 				{/*</button>*/}
 			</div>
 
+			{loading && <div className='mt-3 text-center'>
+				<Loader />
+			</div>}
+
+			{!loading && items.length === 0 && <div className='mt-3 text-center'>
+				<h3>No Results found :(</h3>
+			</div>}
+
 			{/* Showing results count */}
-			{items.length && <p className="text-center text-gray-600 mb-4">Showing {items.length} result(s)</p>}
+			{items.length > 0 && <p className="text-center text-gray-600 mb-4">Showing {items.length} result(s)</p>}
 
 			{/* Results List */}
 			<div className="border border-gray-300 rounded-lg overflow-hidden">
-				{items.map((result) => (
+				{items.length > 0 && items.map((result) => (
 					<div key={result.id} className="card-body justify-between items-center p-4 border-bottom">
 						<div className='row'>
 							<div className='col-8'>
@@ -151,16 +164,16 @@ const PastResults: React.FC = () => {
 			</div>
 
 			{/* Pagination */}
-			<div className="flex justify-center items-center mt-4">
-				<button className="px-3 py-1 bg-primary text-white rounded mr-2">{"<"}</button>
-				<button className="px-3 py-1 bg-primary text-white rounded mx-1">1</button>
-				<button className="px-3 py-1 bg-primary text-white rounded mx-1">2</button>
-				<button className="px-3 py-1 bg-primary text-white rounded mx-1">3</button>
-				<button className="px-3 py-1 bg-primary text-white rounded ml-2">{">"}</button>
-			</div>
+			{/*<div className="flex justify-center items-center mt-4">*/}
+			{/*	<button className="px-3 py-1 bg-primary text-white rounded mr-2">{"<"}</button>*/}
+			{/*	<button className="px-3 py-1 bg-primary text-white rounded mx-1">1</button>*/}
+			{/*	<button className="px-3 py-1 bg-primary text-white rounded mx-1">2</button>*/}
+			{/*	<button className="px-3 py-1 bg-primary text-white rounded mx-1">3</button>*/}
+			{/*	<button className="px-3 py-1 bg-primary text-white rounded ml-2">{">"}</button>*/}
+			{/*</div>*/}
 
 			{summary && <ReactModal isOpen={modalOpen} onClose={handleOnClose} title={'Argument Summary'}>
-				<ArgumentSummary argumentInfo={summary.arguments} relations={summary.relations} />
+				<ArgumentSummary argumentInfo={summary.arguments} relations={summary.relations} zones={summary.zoneLabels} />
 			</ReactModal>}
 
 		</div>

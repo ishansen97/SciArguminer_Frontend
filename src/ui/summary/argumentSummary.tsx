@@ -4,6 +4,7 @@ import {FC} from "react";
 interface ArgumentSummaryProps {
 	argumentInfo: SummaryInfo;
 	relations: SummaryInfo;
+	zones: SummaryInfo;
 }
 
 function getInfo(summaryInfo: SummaryInfo, title: string): JSX.Element  {
@@ -27,11 +28,12 @@ function getInfo(summaryInfo: SummaryInfo, title: string): JSX.Element  {
 	)
 }
 
-const ArgumentSummary: FC<ArgumentSummaryProps> = ({argumentInfo, relations}) => {
+const ArgumentSummary: FC<ArgumentSummaryProps> = ({argumentInfo, relations, zones}) => {
 	return (
 		<>
 			{getInfo(argumentInfo, 'Arguments')}
 			{getInfo(relations, 'Relations')}
+			{getInfo(zones, 'Zones')}
 		</>
 	)
 }

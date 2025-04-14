@@ -9,7 +9,7 @@ export class FileApi {
         // }
         // console.log(Array.from(file.entries()));
         const response: FileInputResponse = await ApiClient.postFile('/api/v1/file', file);
-        console.log(`file input response: ${response}`);
+        console.log(`file input response: ${response}, response status: ${response.status}`);
         return response;
     }
 }

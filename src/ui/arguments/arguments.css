@@ -1,0 +1,60 @@
+.global-zone.active {
+    color: white;
+    background-color: var(--bs-blue) !important;
+}
+
+.global-zone.active span {
+    color: white !important;
+    text-decoration: none;
+    /*background-color: var(--bs-blue) !important;*/
+}
+
+.arg-tag {
+    background-color: lightgray;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+    border-color: #888888 !important;
+}
+
+.box-shadow {
+    box-shadow: 0px 2px 6px #888888;
+}
+
+.tag-conclusions {
+    color: darkgreen;
+    background-color: lightgreen !important;
+}
+
+.tag-methods {
+    color: darkorange !important;
+    background-color: lightpink !important;
+}
+
+.tag-results {
+    color: darkblue !important;
+    background-color: lightblue !important;
+}
+
+.tag-results,
+.tag-conclusions,
+.tag-methods {
+    padding: 0.25rem 0.75rem;
+}
+
+.local-zone-header,
+.local-zone-footer {
+    display: flex;
+    background: white !important;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.similarity-tag {
+    color: navy;
+}
+
+.no-link {
+    text-decoration: none !important;
+}

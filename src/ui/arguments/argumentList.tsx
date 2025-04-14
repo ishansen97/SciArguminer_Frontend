@@ -11,6 +11,7 @@ const ArgumentList: React.FC<ArgumentListProps> = ({argumentList}) => {
             <div className='card-text'>
                 <h4>{arg.text}</h4>
                 <p className='card-subtitle'>{arg.type}</p>
+                <p className='card-subtitle'>{arg.title}</p>
                 {/*<p className='card-subtitle font-monospace'>({arg.start} - {arg.end})</p>*/}
             </div>
         </div>

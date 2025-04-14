@@ -1,5 +1,6 @@
 import {Argument, GlobalLocalInfo, ZoneLabel} from "../../models/FileInput";
 import {FC, useState} from "react";
+import './arguments.css'
 
 interface GlobalLocalArgProps {
     globalArguments: Argument[]
@@ -14,8 +15,10 @@ interface LocalArgumentProps {
 const ArgumentComparison: FC<GlobalLocalArgProps> = ({globalArguments, globalZones, globalLocalArgumentInfo}) => {
     const [globalSelected, setGlobalSelected] = useState<boolean>(false)
     const [localInfo, setLocalInfo] = useState<{argument: Argument, similarity: string}[]>()
+    const [selectedItem, setSelectedItem] = useState<number>();
 
     const handleGlobalClick = (id: number) => {
+        setSelectedItem(id)
         setGlobalSelected(true);
         setLocalInfo(globalLocalArgumentInfo[id]);
     }
@@ -55,10 +58,11 @@ const ArgumentComparison: FC<GlobalLocalArgProps> = ({globalArguments, globalZon
                     {/*    </div>*/}
                     {/*)}*/}
                     {globalZones.map((zoneLabel: ZoneLabel, index: number) =>
-                        <div className='card-body bg-body-secondary mb-3'>
+                        <div className={`card-body bg-body-secondary mb-3 global-zone ${selectedItem === index + 1 ? 'active' : ''} shadow-sm border-opacity-50`}>
                             <h5 className='card-text'>{zoneLabel.sentence}</h5>
-                            <button className='btn btn-link' onClick={() => handleGlobalClick(index+1)}>
-                                <span className={`card-subtitle text-${getZoneColor(zoneLabel.label)}`}>{zoneLabel.label}</span>
+                            <button className='btn btn-link no-link' onClick={() => handleGlobalClick(index+1)}>
+                                {/*<span className={`card-subtitle text-${getZoneColor(zoneLabel.label)}`}>{zoneLabel.label}</span>*/}
+                                <span className={`card-subtitle tag-${zoneLabel.label.toLowerCase()}`}>{zoneLabel.label}</span>
                             </button>
                         </div>
                     )}
@@ -75,14 +79,23 @@ const ArgumentComparison: FC<GlobalLocalArgProps> = ({globalArguments, globalZon
 }
 
 const LocalArgumentComp: FC<LocalArgumentProps> = ({localArguments}) => {
+    localArguments.sort((curr,next) => parseFloat(next.similarity) - parseFloat(curr.similarity))
+
+    if (localArguments.length === 0) {
+        return <div className='text-center text-warning'>No Local Argument(s) Found.</div>
+    }
     return localArguments.map((arg, index) =>
-        <div className='card bg-light'>
+        <div className='card mb-2 box-shadow'>
+            <div className='card-header local-zone-header'>
+                <div className='card-title fw-semibold'>{arg.argument.title}</div>
+                <span className='arg-tag'>{arg.argument.type}</span>
+            </div>
             <div className='card-body'>
-                <p>Zone Label: {arg.argument.zone}</p>
-                <p>Argument Type: {arg.argument.type}</p>
-                <p>Text: {arg.argument.text}</p>
-                <p>Section: {arg.argument.title}</p>
-                <p>Similarity: {arg.similarity}</p>
+                <p className='card-text'>{arg.argument.text}</p>
+            </div>
+            <div className='card-footer local-zone-footer'>
+                <span className={`tag-${arg.argument.zone.toLowerCase()}`}>{arg.argument.zone}</span>
+                <span className='similarity-tag'>{arg.similarity}</span>
             </div>
         </div>
     )

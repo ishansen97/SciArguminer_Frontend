@@ -7,6 +7,8 @@ import spinner from '../../assets/images/spinner.svg'
 import {FileApi} from "../../service/FileApi.ts";
 import {useNavigate} from "react-router-dom";
 import {FileInputResponse} from "../../models/FileInput.ts";
+import {ToastContainer, toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
 
 const PdfUpload: React.FC = () => {
   const navigate = useNavigate();
@@ -68,11 +70,17 @@ const PdfUpload: React.FC = () => {
     const file = fileInputRef.current?.files?.[0];
     const formData = new FormData();
     formData.append("file", file); // The key name should match the API requirement
-    const response = await FileApi.handleFileInput(formData);
-    if (response.status === 200) {
-      navigateToArguments(response)
-    } else {
-      setFileName("Something went wrong. Please try again.");
+    try {
+      const response = await FileApi.handleFileInput(formData);
+      if (response.status === 200) {
+        navigateToArguments(response)
+      } else {
+        setFileName("Something went wrong. Please try again.");
+        setIsPending(false)
+      }
+    } catch (error) {
+      showToastMessage("Something went wrong. Please try again.");
+      setFileName(null);
       setIsPending(false)
     }
   };
@@ -89,6 +97,13 @@ const PdfUpload: React.FC = () => {
         globalLocalArgumentInfo: response.globalLocalArgumentInfo,
       }
     })
+  }
+
+  // displays a toast message
+  const showToastMessage = (message: string) => {
+    toast.error(message, {
+      position: "top-left",
+    });
   }
 
   return (
@@ -145,6 +160,7 @@ const PdfUpload: React.FC = () => {
           </div>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 };

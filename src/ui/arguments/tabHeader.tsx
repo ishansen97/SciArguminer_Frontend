@@ -136,7 +136,7 @@ const TabHeaders: React.FC<TabProps> = ({tabIndex}) => {
             </div>
 
             <ReactModal isOpen={modalOpen} title={'Argument Summary'} onClose={() => setModalOpen(false)}>
-                <ArgumentSummary argumentInfo={summary.arguments} relations={summary.relations} />
+                <ArgumentSummary argumentInfo={summary.arguments} relations={summary.relations} zones={summary.zoneLabels} />
             </ReactModal>
 
             <ReactModal isOpen={saveModalOpen} title={'Save Report'} onClose={() => setSaveModalOpen(false)}>

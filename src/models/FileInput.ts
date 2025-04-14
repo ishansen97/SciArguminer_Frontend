@@ -56,6 +56,7 @@ export type GlobalLocalInfo = {
 export type Summary = {
     arguments: SummaryInfo;
     relations: SummaryInfo;
+    zoneLabels: SummaryInfo;
     // globalLocal: {
     //     globalArguments: SummaryInfo;
     //     localArguments: SummaryInfo;
