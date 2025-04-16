@@ -58,3 +58,8 @@
 .no-link {
     text-decoration: none !important;
 }
+
+.type-btn-group > .type-active {
+    color: white;
+    background-color: blue !important;
+}

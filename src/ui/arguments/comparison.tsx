@@ -1,4 +1,11 @@
-import {Argument, GlobalLocalInfo, ZoneLabel} from "../../models/FileInput";
+import {
+    Argument,
+    GlobalLocalInfo,
+    GlobalLocalInfoSentence,
+    LocalArgumentInfo,
+    LocalSentenceInfo,
+    ZoneLabel
+} from "../../models/FileInput";
 import {FC, useState} from "react";
 import './arguments.css'
 
@@ -6,21 +13,30 @@ interface GlobalLocalArgProps {
     globalArguments: Argument[]
     globalZones: ZoneLabel[]
     globalLocalArgumentInfo: GlobalLocalInfo
+    globalLocalArgumentSentenceInfo: GlobalLocalInfoSentence
 }
 
 interface LocalArgumentProps {
-    localArguments: {argument: Argument, similarity: string}[];
+    localArguments: LocalArgumentInfo[];
 }
 
-const ArgumentComparison: FC<GlobalLocalArgProps> = ({globalArguments, globalZones, globalLocalArgumentInfo}) => {
+interface LocalArgumentSentenceProps {
+    localSentences: LocalSentenceInfo[];
+}
+
+const ArgumentComparison: FC<GlobalLocalArgProps> = (
+    {globalArguments, globalZones, globalLocalArgumentInfo, globalLocalArgumentSentenceInfo}) => {
     const [globalSelected, setGlobalSelected] = useState<boolean>(false)
-    const [localInfo, setLocalInfo] = useState<{argument: Argument, similarity: string}[]>()
+    const [localInfo, setLocalInfo] = useState<LocalArgumentInfo[]>()
+    const [localSentenceInfo, setLocalSentenceInfo] = useState<LocalSentenceInfo[]>()
     const [selectedItem, setSelectedItem] = useState<number>();
+    const [selectedViewType, setSelectedViewType] = useState<string>('Argument')
 
     const handleGlobalClick = (id: number) => {
         setSelectedItem(id)
         setGlobalSelected(true);
         setLocalInfo(globalLocalArgumentInfo[id]);
+        setLocalSentenceInfo(globalLocalArgumentSentenceInfo[id]);
     }
 
     const getZoneColor = (label: string) => {
@@ -48,6 +64,14 @@ const ArgumentComparison: FC<GlobalLocalArgProps> = ({globalArguments, globalZon
             <div className='text-center mb-4'>
                 <h2>Global / Local arguments</h2>
             </div>
+            <div className='d-flex mb-3 justify-content-center'>
+                <div className='btn-group type-btn-group w-auto'>
+                    <button className={`btn btn-light ${selectedViewType === 'Argument' ? 'type-active' : ''}`}
+                            onClick={() => setSelectedViewType('Argument')}>Argument</button>
+                    <button className={`btn btn-light ${selectedViewType === 'Zones' ? 'type-active' : ''}`}
+                            onClick={() => setSelectedViewType('Zones')}>Zone</button>
+                </div>
+            </div>
             <div className='row'>
                 <div className='col-5 card mx-3'>
                     <h3 className='text-primary'>Global Arguments</h3>
@@ -70,8 +94,8 @@ const ArgumentComparison: FC<GlobalLocalArgProps> = ({globalArguments, globalZon
                 </div>
                 <div className='col-5 card'>
                     <h3 className='text-warning'>Local Arguments</h3>
-                    {globalSelected && localInfo ?  <LocalArgumentComp localArguments={localInfo} />
-                        : <span className='text-center bg-body-tertiary'>No Global Argument Selected</span>}
+                    {globalSelected && (selectedViewType === 'Argument') && localInfo &&  <LocalArgumentComp localArguments={localInfo} />}
+                    {globalSelected && (selectedViewType === 'Zones') && localSentenceInfo &&  <LocalArgumentSentenceComp localSentences={localSentenceInfo} />}
                 </div>
             </div>
         </div>
@@ -100,5 +124,30 @@ const LocalArgumentComp: FC<LocalArgumentProps> = ({localArguments}) => {
         </div>
     )
 }
+
+const LocalArgumentSentenceComp: FC<LocalArgumentSentenceProps> = ({localSentences}) => {
+    localSentences.sort((curr,next) => parseFloat(next.similarity) - parseFloat(curr.similarity))
+
+    if (localSentences.length === 0) {
+        return <div className='text-center text-warning'>No Local Argument(s) Found.</div>
+    }
+    return localSentences.map((arg, index) =>
+        <div className='card mb-2 box-shadow'>
+            <div className='card-header local-zone-header'>
+                <div className='card-title fw-semibold'>{arg.localSentence.label}</div>
+                <span className='arg-tag'>{arg.localSentence.label}</span>
+            </div>
+            <div className='card-body'>
+                <p className='card-text'>{arg.localSentence.sentence}</p>
+            </div>
+            <div className='card-footer local-zone-footer'>
+                {/*<span className={`tag-${arg.argument.zone.toLowerCase()}`}>{arg.argument.zone}</span>*/}
+                <span className='similarity-tag'>{arg.similarity}</span>
+            </div>
+        </div>
+    )
+}
+
+
 
 export default ArgumentComparison;

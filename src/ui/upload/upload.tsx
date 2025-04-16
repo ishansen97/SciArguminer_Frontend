@@ -95,6 +95,7 @@ const PdfUpload: React.FC = () => {
         globalArguments: response.globalArguments,
         globalZones: response.globalZones,
         globalLocalArgumentInfo: response.globalLocalArgumentInfo,
+        globalLocalArgumentInfoSentences: response.globalLocalArgumentInfoSentences,
       }
     })
   }

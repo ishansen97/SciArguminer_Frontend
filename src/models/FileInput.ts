@@ -14,6 +14,7 @@ export type FileInputResponse = {
     globalArguments: Argument[];
     globalZones: ZoneLabel[];
     globalLocalArgumentInfo: GlobalLocalInfo;
+    globalLocalArgumentInfoSentences: GlobalLocalInfoSentence;
 }
 
 export type Section = {
@@ -47,10 +48,11 @@ export type ZoneLabel = {
 }
 
 export type GlobalLocalInfo = {
-    [key: number]: Array<{
-        argument: Argument;
-        similarity: string;
-    }>;
+    [key: number]: Array<LocalArgumentInfo>;
+}
+
+export type GlobalLocalInfoSentence = {
+    [key: number]: Array<LocalSentenceInfo>;
 }
 
 export type Summary = {
@@ -66,4 +68,14 @@ export type Summary = {
 export type SummaryInfo = {
     totalCount: number;
     [arg: string]: number;
+}
+
+export type LocalArgumentInfo = {
+    argument: Argument;
+    similarity: string;
+}
+
+export type LocalSentenceInfo = {
+    localSentence: ZoneLabel;
+    similarity: string;
 }
