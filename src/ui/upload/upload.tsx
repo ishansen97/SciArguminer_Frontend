@@ -9,6 +9,8 @@ import {useNavigate} from "react-router-dom";
 import {FileInputResponse} from "../../models/FileInput.ts";
 import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
+import ReactModal from "../../common/modals/reactModal.tsx";
+import DoiComp from "./doiComp.tsx";
 
 const PdfUpload: React.FC = () => {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ const PdfUpload: React.FC = () => {
   const [dragOver, setDragOver] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -107,9 +110,21 @@ const PdfUpload: React.FC = () => {
     });
   }
 
+  const handleDOIBtnClick = () => {
+    setModalOpen(true);
+  }
+
+  const onDoiError = () => {
+    setModalOpen(false);
+    showToastMessage("Something went wrong. Please try again.");
+  }
+
   return (
     <div className="container mt-5">
-      <h1 className="text-center mb-4">Sci-Arguminer</h1>
+      <div className='position-relative text-center mb-4'>
+        <span className="h1">Sci-Arguminer</span>
+        <button className='btn btn-primary position-absolute top-0 end-0 mt-2' onClick={() => setModalOpen(true)}>Insert DOI Url</button>
+      </div>
       <div
         id="upload-area"
         className={`upload-area ${dragOver ? "dragover" : ""} ${isPending ? "disabled" : ""}`}
@@ -161,6 +176,10 @@ const PdfUpload: React.FC = () => {
           </div>
         </div>
       </form>
+
+      <ReactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={'DOI Url Input'}>
+        <DoiComp onDoiError={onDoiError} />
+      </ReactModal>
       <ToastContainer />
     </div>
   );
