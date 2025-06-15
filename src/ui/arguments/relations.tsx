@@ -27,7 +27,7 @@ const ArgumentRelations: React.FC<RelationProps> = ({relations}) => {
             <div className='card-body bg-body-secondary'>
                 <div className='card-text'>
                     <h4 style={getStyle(relation.relation)}>{relation.head.text}</h4>
-                    <span className='card-subtitle'>{relation.relation}</span>
+                    <p className='card-title fw-bold' style={{background: 'lightgoldenrodyellow'}}>{relation.relation}</p>
                     <p className='card-subtitle font-monospace'>({relation.tail.text})</p>
                 </div>
             </div>

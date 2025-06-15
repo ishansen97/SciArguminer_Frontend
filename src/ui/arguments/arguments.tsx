@@ -77,7 +77,7 @@ const formatBodyWithStyles = (
 
     // Add the styled span
     fragments.push(
-      <span className='ishan' key={`text-${index}-styled`} style={getStyle()}>
+      <span className='ishan' key={`text-${index}-styled`} style={getStyle()} title={type}>
         {(start > -1 && end > -1) ? body.slice(start, end) : body}
       </span>
     );
